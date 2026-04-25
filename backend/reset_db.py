@@ -1,0 +1,7 @@
+from main import app, db
+with app.app_context():
+    db.drop_all()
+    db.create_all()
+    from models import seed_staff
+    seed_staff(db)
+    print("Database Reset Successful.")

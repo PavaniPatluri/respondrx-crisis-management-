@@ -1,0 +1,249 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap');
+
+/* ── Design Tokens ─────────────────────────────────────────────────────── */
+:root {
+  /* Severity Colors */
+  --clr-critical: #ff2d55;
+  --clr-high:     #ff9f0a;
+  --clr-medium:   #ffd60a;
+  --clr-low:      #30d158;
+  --clr-safe:     #1c7a3e;
+
+  /* UI Palette */
+  --bg-base:      #0b0d11;
+  --bg-panel:     #111318;
+  --bg-card:      #181c24;
+  --bg-hover:     #1e2330;
+  --border:       rgba(255,255,255,0.07);
+  --border-accent:rgba(255,255,255,0.14);
+
+  /* Text */
+  --text-primary:   #f0f2f5;
+  --text-secondary: #8a93a8;
+  --text-muted:     #4a5168;
+
+  /* Accents */
+  --accent: #3b82f6;
+  --accent-dim: rgba(59,130,246,0.15);
+
+  /* Status */
+  --status-pending:     #8a93a8;
+  --status-in_progress: #ff9f0a;
+  --status-completed:   #30d158;
+
+  /* Layout */
+  --radius-sm:  6px;
+  --radius-md:  10px;
+  --radius-lg:  14px;
+  --font-main:  'Inter', system-ui, sans-serif;
+  --font-mono:  'JetBrains Mono', monospace;
+}
+
+/* ── Reset ────────────────────────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html, body, #root { height: 100%; width: 100%; overflow: hidden; }
+body {
+  background: var(--bg-base);
+  color: var(--text-primary);
+  font-family: var(--font-main);
+  font-size: 14px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── Scrollbar ────────────────────────────────────────────────────────────── */
+::-webkit-scrollbar { width: 4px; height: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border-accent); border-radius: 4px; }
+
+/* ── Card ────────────────────────────────────────────────────────────────── */
+.card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+.card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--border);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+.card-body { padding: 12px; }
+
+/* ── Severity Badge ───────────────────────────────────────────────────────── */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 8px;
+  border-radius: 100px;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+.badge-critical { background: rgba(255,45,85,0.15); color: var(--clr-critical); }
+.badge-high     { background: rgba(255,159,10,0.15); color: var(--clr-high); }
+.badge-medium   { background: rgba(255,214,10,0.15); color: var(--clr-medium); }
+.badge-low      { background: rgba(48,209,88,0.15); color: var(--clr-low); }
+
+/* ── Status Dot ──────────────────────────────────────────────────────────── */
+.dot {
+  display: inline-block;
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.dot-critical { background: var(--clr-critical); box-shadow: 0 0 6px var(--clr-critical); }
+.dot-high     { background: var(--clr-high);     box-shadow: 0 0 6px var(--clr-high); }
+.dot-medium   { background: var(--clr-medium);   box-shadow: 0 0 6px var(--clr-medium); }
+.dot-low, .dot-safe { background: var(--clr-low); box-shadow: 0 0 6px var(--clr-low); }
+.dot-pending     { background: var(--status-pending); }
+.dot-in_progress { background: var(--status-in_progress); box-shadow: 0 0 5px var(--status-in_progress); }
+.dot-completed   { background: var(--status-completed); box-shadow: 0 0 5px var(--status-completed); }
+
+/* ── Btn ─────────────────────────────────────────────────────────────────── */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-accent);
+  background: var(--bg-hover);
+  color: var(--text-primary);
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  font-family: var(--font-main);
+}
+.btn:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-dim); }
+.btn-fire { background: rgba(255,45,85,0.1); border-color: rgba(255,45,85,0.4); color: var(--clr-critical); }
+.btn-fire:hover { background: rgba(255,45,85,0.2); border-color: var(--clr-critical); }
+.btn-med  { background: rgba(255,159,10,0.1); border-color: rgba(255,159,10,0.4); color: var(--clr-high); }
+.btn-med:hover  { background: rgba(255,159,10,0.2); border-color: var(--clr-high); }
+.btn-sec  { background: rgba(59,130,246,0.1); border-color: rgba(59,130,246,0.4); color: var(--accent); }
+.btn-sec:hover  { background: var(--accent-dim); border-color: var(--accent); }
+.btn-resolve { background: rgba(48,209,88,0.1); border-color: rgba(48,209,88,0.4); color: var(--clr-low); }
+.btn-resolve:hover { background: rgba(48,209,88,0.2); border-color: var(--clr-low); }
+.btn-reset   { background: rgba(138,147,168,0.1); border-color: rgba(138,147,168,0.3); color: var(--text-secondary); }
+
+/* ── Pulse animation for active incidents ─────────────────────────────────── */
+@keyframes scanning {
+  0%   { transform: translateX(-100%); }
+  100% { transform: translateX(100%);  }
+}
+@keyframes pulse-bg {
+  0%   { opacity: 0.3; }
+  50%  { opacity: 0.7; }
+  100% { opacity: 0.3; }
+}
+.pulse-bg {
+  animation: pulse-bg 1.5s infinite ease-in-out;
+}
+.pulse-ring {
+  position: absolute;
+  border-radius: 50%;
+  animation: pulse-ring 1.5s ease-out infinite;
+  pointer-events: none;
+}
+
+/* ── Toast notification (Dashboard Style) ──────────────────────────────────── */
+@keyframes slide-in {
+  from { transform: translateX(110%); opacity: 0; }
+  to   { transform: translateX(0);    opacity: 1; }
+}
+@keyframes slide-out {
+  from { opacity: 1; transform: translateX(0); }
+  to   { opacity: 0; transform: translateX(110%); }
+}
+
+.toast-container {
+  position: fixed;
+  top: 70px;
+  right: 24px;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 320px;
+}
+
+.toast {
+  background: rgba(17, 19, 24, 0.75);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius-lg);
+  padding: 14px 16px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  animation: slide-in 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+  box-shadow: 0 12px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.05);
+  position: relative;
+  overflow: hidden;
+}
+
+.toast::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; bottom: 0;
+  width: 4px;
+}
+
+.toast.exiting {
+  animation: slide-out 0.3s cubic-bezier(0.8, 0.2, 1, 0.8) forwards;
+}
+
+.toast-icon {
+  font-size: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.toast-content {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.toast-title {
+  font-size: 10px;
+  font-family: var(--font-mono);
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: var(--text-secondary);
+}
+
+.toast-message {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-primary);
+  line-height: 1.3;
+}
+
+/* Severity Accents */
+.toast-critical::before { background: var(--clr-critical); box-shadow: 0 0 10px var(--clr-critical); }
+.toast-critical .toast-title { color: var(--clr-critical); }
+
+.toast-high::before { background: var(--clr-high); box-shadow: 0 0 10px var(--clr-high); }
+.toast-high .toast-title { color: var(--clr-high); }
+
+.toast-info::before { background: var(--accent); box-shadow: 0 0 10px var(--accent); }
+.toast-info .toast-title { color: var(--accent); }
+
+.toast-success::before { background: var(--clr-low); box-shadow: 0 0 10px var(--clr-low); }
+.toast-success .toast-title { color: var(--clr-low); }
+
+@keyframes pulse-glow { from { box-shadow: 0 0 10px rgba(255, 68, 68, 0.5); } to { box-shadow: 0 0 30px rgba(255, 68, 68, 0.8); } }
+.mic-active { color: var(--clr-critical) !important; animation: pulse 1s infinite; }
