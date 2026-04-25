@@ -4,7 +4,7 @@ import Dashboard from './components/Dashboard';
 import Login from './components/Login';
 import './index.css';
 
-const BACKEND_URL = 'http://localhost:5000';
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:5000';
 
 const translate = (text, lang) => {
   if (!text || typeof text !== 'string' || lang === 'en') return text;
