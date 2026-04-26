@@ -4,14 +4,14 @@ import React, { useState, useEffect } from 'react';
  * IncidentReplay — Forensic timeline playback of an incident's life cycle.
  * Fetches events from /replay/<id> and displays them as a chronological flow.
  */
-export default function IncidentReplay({ incidentId }) {
+export default function IncidentReplay({ incidentId, backendUrl }) {
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (incidentId) {
       setLoading(true);
-      fetch(`http://localhost:5000/replay/${incidentId}`)
+      fetch(`${backendUrl}/replay/${incidentId}`)
         .then(res => res.json())
         .then(data => {
           setEvents(data);
@@ -65,7 +65,7 @@ export default function IncidentReplay({ incidentId }) {
           </div>
         </div>
         <button
-          onClick={() => fetch(`http://localhost:5000/replay/${incidentId}/start`, { method: 'POST' })}
+          onClick={() => fetch(`${backendUrl}/replay/${incidentId}/start`, { method: 'POST' })}
           style={{
             background: 'var(--accent)', color: '#fff', border: 'none',
             padding: '6px 12px', borderRadius: '6px', fontSize: '11px', fontWeight: 700,

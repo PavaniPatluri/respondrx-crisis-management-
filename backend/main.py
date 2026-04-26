@@ -10,6 +10,9 @@ from flask import Flask, request, jsonify
 from flask_socketio import SocketIO, join_room
 from flask_cors import CORS
 import uuid
+from dotenv import load_dotenv
+
+load_dotenv()
 
 from models import db, Incident, Staff, Task, IncidentLog, EventLog, seed_staff, User, seed_users
 from decision_engine import DecisionEngine
@@ -34,11 +37,14 @@ app = Flask(__name__)
 # Enable CORS globally for all routes and origins
 CORS(app, supports_credentials=True)
 
-app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///crisis.db"
-app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
-app.config["SECRET_KEY"] = "crisis-response-secret-2024"
+app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv("DATABASE_URL", "sqlite:///crisis.db")
+if app.config["SQLALCHEMY_DATABASE_URI"].startswith("postgres://"):
+    app.config["SQLALCHEMY_DATABASE_URI"] = app.config["SQLALCHEMY_DATABASE_URI"].replace("postgres://", "postgresql://", 1)
 
-socketio = SocketIO(app, cors_allowed_origins="*", async_mode="threading")
+app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+app.config["SECRET_KEY"] = os.getenv("SECRET_KEY", "crisis-response-secret-2024")
+
+socketio = SocketIO(app, cors_allowed_origins="*", async_mode=os.getenv("SOCKETIO_ASYNC_MODE"))
 
 @app.after_request
 def add_cors_headers(response):
@@ -699,4 +705,5 @@ start_countdown_timer()
 
 # ─────────────────────────────────────────────────────────────────────────────
 if __name__ == "__main__":
-    socketio.run(app, host="0.0.0.0", port=5000, debug=True, allow_unsafe_werkzeug=True)
+    port = int(os.getenv("PORT", 5000))
+    socketio.run(app, host="0.0.0.0", port=port, debug=True, allow_unsafe_werkzeug=True)

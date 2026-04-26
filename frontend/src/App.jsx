@@ -534,7 +534,7 @@ export default function App() {
   return (
     <>
       {!user ? (
-        <Login onLoginComplete={setUser} />
+        <Login onLoginComplete={setUser} backendUrl={BACKEND_URL} />
       ) : (
         <Dashboard
           user={user}

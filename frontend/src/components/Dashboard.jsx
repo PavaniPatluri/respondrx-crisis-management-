@@ -229,7 +229,7 @@ export default function Dashboard({
             </div>
             <div style={{ flex: 1, overflowY: 'auto' }}>
               {user?.role !== 'staff' && centerBottomTab === 'reasoning' && <DecisionViewer activeIncident={activeIncident} t={t} />}
-              {user?.role !== 'staff' && centerBottomTab === 'forensics' && <IncidentReplay incidentId={activeIncident?.id} />}
+              {user?.role !== 'staff' && centerBottomTab === 'forensics' && <IncidentReplay incidentId={activeIncident?.id} backendUrl={backendUrl} />}
               {user?.role === 'staff' && <TaskTracker tasks={tasks} incidents={incidents} onUpdateTask={onUpdateTask} />}
             </div>
           </div>

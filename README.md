@@ -28,5 +28,25 @@
 2. `npm install`
 3. `npm run dev`
 
+## ⚙️ Deployment (Free-Forever Strategy)
+
+This project is optimized for a 100% free deployment using the following "Trio":
+
+### 1. Backend: Hugging Face Spaces (Free API Hosting)
+1.  **Create Space**: Go to [Hugging Face](https://huggingface.co/new-space).
+2.  **Config**: Select **Docker** (Blank template).
+3.  **Upload**: Upload the `backend/` folder and the `Dockerfile` from the root.
+4.  **Secrets**: In Space Settings, add `DATABASE_URL` and `SECRET_KEY`.
+
+### 2. Database: Supabase (Free PostgreSQL)
+1.  **Project**: Create a new project on [Supabase](https://supabase.com/).
+2.  **Connection**: Copy the "Transaction" Connection String (URI) from Database Settings.
+3.  **Link**: Use this as your `DATABASE_URL` in Hugging Face.
+
+### 3. Frontend: Vercel (Free Dashboard Hosting)
+1.  **New Project**: Connect your GitHub repo to [Vercel](https://vercel.com/).
+2.  **Settings**: Set **Root Directory** to `frontend`.
+3.  **Variables**: Add `VITE_BACKEND_URL` (your Hugging Face Space URL ending in `.hf.space`).
+
 ---
 *Developed for high-impact hospitality environments. Smart. Resilient. RespondrX.*
