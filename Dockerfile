@@ -14,5 +14,5 @@ COPY . .
 # Expose the port the app runs on (Hugging Face Spaces uses 7860)
 EXPOSE 7860
 
-# Start the application using gunicorn and eventlet
-CMD gunicorn --worker-class eventlet -w 1 --bind 0.0.0.0:${PORT:-7860} main:app
+# Start the application using gunicorn with threads for stability
+CMD gunicorn -w 1 --threads 4 --bind 0.0.0.0:${PORT:-7860} main:app

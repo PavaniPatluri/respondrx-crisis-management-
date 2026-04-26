@@ -37,9 +37,23 @@ app = Flask(__name__)
 # Enable CORS globally for all routes and origins
 CORS(app, supports_credentials=True)
 
-app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv("DATABASE_URL", "sqlite:///crisis.db")
-if app.config["SQLALCHEMY_DATABASE_URI"].startswith("postgres://"):
-    app.config["SQLALCHEMY_DATABASE_URI"] = app.config["SQLALCHEMY_DATABASE_URI"].replace("postgres://", "postgresql://", 1)
+# --- SUPER SAFE DATABASE CONFIG ---
+db_uri = os.getenv("DATABASE_URL")
+
+# Fallback to the known Session Pooler URI if the env var is missing or broken
+if not db_uri or "postgres.hjttmsmullqiysqhduwk" not in db_uri:
+    user = "postgres.hjttmsmullqiysqhduwk"
+    pw = "Respondrx2026"
+    host = "aws-1-ap-northeast-1.pooler.supabase.com"
+    port = "5432"
+    db_name = "postgres"
+    db_uri = f"postgresql://{user}:{pw}@{host}:{port}/{db_name}"
+
+if db_uri.startswith("postgres://"):
+    db_uri = db_uri.replace("postgres://", "postgresql://", 1)
+
+app.config["SQLALCHEMY_DATABASE_URI"] = db_uri
+# ----------------------------------
 
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 app.config["SECRET_KEY"] = os.getenv("SECRET_KEY", "crisis-response-secret-2024")
