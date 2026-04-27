@@ -2,17 +2,20 @@ FROM python:3.10-slim
 
 WORKDIR /app
 
-# Copy the requirements file into the container
-COPY requirements.txt ./
+# Install system dependencies
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    build-essential \
+    && rm -rf /var/lib/apt/lists/*
 
-# Install any needed packages specified in requirements.txt
+# Copy backend requirements first
+COPY backend/requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy the rest of the application code into the container
-COPY . .
+# Copy backend code
+COPY backend/ .
 
-# Expose the port the app runs on (Hugging Face Spaces uses 7860)
-EXPOSE 7860
+# Expose port (default to 5000, can be overridden by $PORT)
+EXPOSE 5000
 
-# Start the application using gunicorn with threads for stability
-CMD gunicorn -w 1 --threads 4 --bind 0.0.0.0:${PORT:-7860} main:app
+# Start the application using gunicorn with eventlet for SocketIO support
+CMD gunicorn --worker-class eventlet -w 1 --bind 0.0.0.0:${PORT:-5000} main:app

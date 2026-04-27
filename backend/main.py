@@ -34,8 +34,8 @@ import json
 
 # ─── App Setup ───────────────────────────────────────────────────────────────
 app = Flask(__name__)
-# Enable CORS globally for all routes and origins
-CORS(app, supports_credentials=True)
+# Enable CORS with more flexible options for production
+CORS(app, supports_credentials=True, resources={r"/*": {"origins": "*"}})
 
 # --- SUPER SAFE DATABASE CONFIG ---
 db_uri = os.getenv("DATABASE_URL")
@@ -62,9 +62,11 @@ socketio = SocketIO(app, cors_allowed_origins="*", async_mode=os.getenv("SOCKETI
 
 @app.after_request
 def add_cors_headers(response):
+    # Ensure CORS headers are present even on errors
     response.headers["Access-Control-Allow-Origin"] = "*"
     response.headers["Access-Control-Allow-Methods"] = "GET, POST, PUT, DELETE, OPTIONS"
     response.headers["Access-Control-Allow-Headers"] = "Content-Type, Authorization"
+    response.headers["Access-Control-Allow-Credentials"] = "true"
     return response
 
 db.init_app(app)
@@ -77,9 +79,20 @@ adaptive_engine = AdaptiveEngine(socketio)
 MOCK_TOKENS = {} # token -> dict(user_id, username, role)
 
 with app.app_context():
-    db.create_all()
-    seed_users(db)
-    seed_staff(db)
+    try:
+        print(f"[DB] Attempting connection to: {app.config['SQLALCHEMY_DATABASE_URI'].split('@')[-1]}")
+        db.create_all()
+        seed_users(db)
+        seed_staff(db)
+        print("[OK] Connected to Supabase!")
+    except Exception as e:
+        print(f"[CRITICAL] Database connection failed: {e}")
+        print("[SAFE MODE] Falling back to local SQLite to prevent crash...")
+        app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///safe_mode.db"
+        db.create_all()
+        seed_users(db)
+        seed_staff(db)
+        print("[OK] Started in Safe Mode (Local DB)")
 
 # ─── Auth Endpoints ──────────────────────────────────────────────────────────
 @app.route("/login", methods=["POST"])
