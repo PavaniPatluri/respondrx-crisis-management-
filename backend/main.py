@@ -37,23 +37,19 @@ app = Flask(__name__)
 # Enable CORS with more flexible options for production
 CORS(app, supports_credentials=True, resources={r"/*": {"origins": "*"}})
 
-# --- SUPER SAFE DATABASE CONFIG ---
+# --- DATABASE CONFIG ---
 db_uri = os.getenv("DATABASE_URL")
 
-# Fallback to the known Session Pooler URI if the env var is missing or broken
-if not db_uri or "postgres.hjttmsmullqiysqhduwk" not in db_uri:
-    user = "postgres.hjttmsmullqiysqhduwk"
-    pw = "Respondrx2026"
-    host = "aws-1-ap-northeast-1.pooler.supabase.com"
-    port = "5432"
-    db_name = "postgres"
-    db_uri = f"postgresql://{user}:{pw}@{host}:{port}/{db_name}"
+# Fallback to local SQLite if no DATABASE_URL is provided
+if not db_uri:
+    print("[WARN] DATABASE_URL not found. Falling back to local SQLite...")
+    db_uri = "sqlite:///nexus.db"
 
 if db_uri.startswith("postgres://"):
     db_uri = db_uri.replace("postgres://", "postgresql://", 1)
 
 app.config["SQLALCHEMY_DATABASE_URI"] = db_uri
-# ----------------------------------
+# ------------------------
 
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 app.config["SECRET_KEY"] = os.getenv("SECRET_KEY", "crisis-response-secret-2024")
